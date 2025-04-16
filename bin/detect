@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# This buildpack is always valid if it's been added to the project. Environment variable checks will come in the bin/compile phase.
+echo "AWS CodeArtifact installation"
+exit 0
