@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Install podman
         run: |
-          apt-get update;
-          apt-get install --yes podman
+          sudo apt-get update
+          sudo apt install --yes podman
       - name: Run test
         run: make test
