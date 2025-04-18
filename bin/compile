@@ -1,13 +1,24 @@
 #!/bin/sh
 
-apt-get update
-apt install sudo
+set -e
 
+apt-get update
+
+# Install basics.
+apt install -y sudo
+
+# Install JRE.
+# Here we specify the exact Java version, but the value should come from your repository.
+apt install -y openjdk-21-jre-headless
+echo "[Java Version]"
+java --version
+
+# Install AWS CLI to fetch Java jar.
 # https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
-
+echo "[AWS CLI Version]"
 aws --version
 
 # aws authenticate ... (and check access keys, secrets)
