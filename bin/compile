@@ -24,9 +24,10 @@ install_java () {
   tar -zxvf /tmp/jvm.tgz -C /tmp/jre/
 
   # Default to Java 21 if file does not exist
-  if [ ! -f ${BUILD_DIR}/system.properties ]; then
-      echo "java.runtime.version = 21" >> ${BUILD_DIR}/system.properties
-  fi
+  # $REPO_ROOT/$ is mounted read-only, we should add this file to the repo
+  # if [ ! -f ${BUILD_DIR}/system.properties ]; then
+  #    echo "java.runtime.version = 21" >> ${BUILD_DIR}/system.properties
+  # fi
 
   # debug
   find /tmp/jre
