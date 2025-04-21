@@ -2,24 +2,32 @@
 
 set -e
 
-apt-get update
 
-# Install basics.
-apt install -y sudo
+if [[ "$(uname)" == "Darwin" ]]; then
+  echo "This script is only supported in Heroku dynos"
+  exit 1
+fi
 
-# Install JRE.
-# Here we specify the exact Java version, but the value should come from your repository.
-apt install -y openjdk-21-jre-headless
-echo "[Java Version]"
-java --version
+install_java () {
+  # Initial cleanup
+  rm -rf /tmp/jvm.tgz /tmp/jre || true
 
-# Install AWS CLI to fetch Java jar.
-# https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-echo "[AWS CLI Version]"
-aws --version
+  # Create required dirs if they do not exist
+  mkdir -p /tmp/jre /app
 
-# aws authenticate ... (and check access keys, secrets)
-# aws codeartifact ...
+  # Fetch and Extract Heroku java installer
+  wget https://buildpack-registry.s3.us-east-1.amazonaws.com/buildpacks/heroku/jvm.tgz -O /tmp/jvm.tgz
+  tar -zxvf /tmp/jvm.tgz -C /tmp/jre/
+
+  # Default to Java 21 if file does not exist
+  if [ ! -f /app/system.properties ]; then
+      echo "java.runtime.version = 21" >> /app/system.properties
+  fi
+
+  # Install Java to /app including .profile.d shell scripts which set JAVA_HOME etc
+  source /tmp/jre/bin/util; source /tmp/jre/bin/java; source /tmp/jre/opt/jdbc.sh
+  install_dir=/app; cache_dir=/tmp; install_java_with_overlay "${install_dir}" "${cache_dir}"
+}
+
+install_java
+
