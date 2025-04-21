@@ -24,8 +24,17 @@ install_java () {
       echo "java.runtime.version = 21" >> /app/system.properties
   fi
 
+  # debug
+  find /tmp/jre
+  find /tmp -type f -name util
+  find /tmp -type f -name java
+  find /tmp -type f -name jdbc.sh
+
   # Install Java to /app including .profile.d shell scripts which set JAVA_HOME etc
-  source /tmp/jre/bin/util; source /tmp/jre/bin/java; source /tmp/jre/opt/jdbc.sh
+  source /tmp/jre/bin/util
+  source /tmp/jre/bin/java
+  source /tmp/jre/opt/jdbc.sh
+
   install_dir=/app; cache_dir=/tmp; install_java_with_overlay "${install_dir}" "${cache_dir}"
 }
 
