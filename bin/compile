@@ -8,20 +8,24 @@ if [[ "$(uname)" == "Darwin" ]]; then
   exit 1
 fi
 
+
+# BUILD_DIR and CACHE_DIR are provided by Heroku's build env
+echo "BUILD_DIR is: $BUILD_DIR"
+
 install_java () {
   # Initial cleanup
   rm -rf /tmp/jvm.tgz /tmp/jre || true
 
   # Create required dirs if they do not exist
-  mkdir -p /tmp/jre /app
+  mkdir -p /tmp/jre
 
   # Fetch and Extract Heroku java installer
   wget https://buildpack-registry.s3.us-east-1.amazonaws.com/buildpacks/heroku/jvm.tgz -O /tmp/jvm.tgz
   tar -zxvf /tmp/jvm.tgz -C /tmp/jre/
 
   # Default to Java 21 if file does not exist
-  if [ ! -f /app/system.properties ]; then
-      echo "java.runtime.version = 21" >> /app/system.properties
+  if [ ! -f ${BUILD_DIR}/system.properties ]; then
+      echo "java.runtime.version = 21" >> ${BUILD_DIR}/system.properties
   fi
 
   # debug
@@ -30,18 +34,18 @@ install_java () {
   find /tmp -type f -name java
   find /tmp -type f -name jdbc.sh
 
-  # Install Java to /app including .profile.d shell scripts which set JAVA_HOME etc
+  # Install Java to ${BUILD_DIR}/ including .profile.d shell scripts which set JAVA_HOME etc
   source /tmp/jre/bin/util
   source /tmp/jre/bin/java
   source /tmp/jre/opt/jdbc.sh
 
-  install_dir=/app; cache_dir=/tmp; install_java_with_overlay "${install_dir}" "${cache_dir}"
+  install_java_with_overlay "${BUILD_DIR}" "${CACHE_DIR}"
 }
 
 install_java
 
-echo "Listing /app"
-ls -al /app/
-echo "Listing /app/profile.d"
-ls -al /app/.profile.d
+echo "Listing ${BUILD_DIR}/"
+ls -al ${BUILD_DIR}/
+echo "Listing ${BUILD_DIR}//profile.d"
+ls -al ${BUILD_DIR}/.profile.d
 
