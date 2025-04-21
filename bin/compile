@@ -34,12 +34,6 @@ install_java () {
   #    echo "java.runtime.version = 21" >> ${BUILD_DIR}/system.properties
   # fi
 
-  # debug
-  find /tmp/jre
-  find /tmp -type f -name util
-  find /tmp -type f -name java
-  find /tmp -type f -name jdbc.sh
-
   # Install Java to ${BUILD_DIR}/ including .profile.d shell scripts which set JAVA_HOME etc
   source /tmp/jre/bin/util
   source /tmp/jre/bin/java
@@ -50,9 +44,3 @@ install_java () {
 }
 
 install_java "${BUILD_DIR}" "${CACHE_DIR}"
-
-echo "Listing ${BUILD_DIR}/"
-ls -al ${BUILD_DIR}/
-echo "Listing ${BUILD_DIR}//profile.d"
-ls -al ${BUILD_DIR}/.profile.d
-
