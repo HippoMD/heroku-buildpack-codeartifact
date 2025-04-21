@@ -8,6 +8,11 @@ if [[ "$(uname)" == "Darwin" ]]; then
   exit 1
 fi
 
+# Heroku build env passes 3 dirs to bin/compile
+BUILD_DIR="$1"
+CACHE_DIR="$2"
+ENV_DIR="$3"
+
 
 # BUILD_DIR and CACHE_DIR are provided by Heroku's build env
 echo "BUILD_DIR is: $BUILD_DIR"
@@ -25,7 +30,7 @@ install_java () {
 
   # Default to Java 21 if file does not exist
   # $REPO_ROOT/$ is mounted read-only, we should add this file to the repo
-  # if [ ! -f ${BUILD_DIR}/system.properties ]; then
+  # if [ ! -f ${1}/system.properties ]; then
   #    echo "java.runtime.version = 21" >> ${BUILD_DIR}/system.properties
   # fi
 
@@ -40,10 +45,11 @@ install_java () {
   source /tmp/jre/bin/java
   source /tmp/jre/opt/jdbc.sh
 
-  install_java_with_overlay "${BUILD_DIR}" "${CACHE_DIR}"
+  install_java_with_overlay "$1" "$2"
+
 }
 
-install_java
+install_java "${BUILD_DIR}" "${CACHE_DIR}"
 
 echo "Listing ${BUILD_DIR}/"
 ls -al ${BUILD_DIR}/
