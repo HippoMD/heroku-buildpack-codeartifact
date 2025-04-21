@@ -40,3 +40,8 @@ install_java () {
 
 install_java
 
+echo "Listing /app"
+ls -al /app/
+echo "Listing /app/profile.d"
+ls -al /app/.profile.d
+
