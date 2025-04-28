@@ -15,7 +15,7 @@ ENV_DIR="$3"
 
 
 # BUILD_DIR and CACHE_DIR are provided by Heroku's build env
-echo "BUILD_DIR is: $BUILD_DIR"
+echo "BUILD_DIR is: ${BUILD_DIR}"
 
 install_java () {
   # Initial cleanup

@@ -11,4 +11,4 @@ This buildpack separates these responsibilities. It only sets up the environment
 To integrate with this, your deployment should involve doing a `git add` of the following and pushing them to the Heroku-hosted git remote:
 - Heroku Procfile (entrypoint into what processes get run).
 - Runnable jar file(s).
-- system.properties.
+- system.properties (JRE installation implementation is inspired by `heroku-buildpack-java`, which needs this file to know which version of JRE to install).
